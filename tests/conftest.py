@@ -1,3 +1,5 @@
+import random
+
 import factory
 import pytest
 from fastapi.testclient import TestClient
@@ -8,22 +10,7 @@ from mantos.app import app
 from mantos.database import get_session
 from mantos.models import Base, Club
 from mantos.settings import Settings
-
-clubs = [
-    'Vasco da Gama',
-    'Barcelona',
-    'Arsenal',
-    'Corinthians',
-    'Boca Juniors',
-]
-
-
-class ClubFactory(factory.Factory):
-    class Meta:
-        model = Club
-
-    id = factory.Faker('uuid4')
-    name = factory.LazyAttribute(lambda n: n for n in clubs)
+from mantos.utils import generate_country
 
 
 @pytest.fixture
@@ -49,3 +36,14 @@ def session():
         session.rollback()
 
     Base.metadata.drop_all(engine)
+
+
+@pytest.fixture
+def club(session):
+    instance = ClubFactory()
+
+    session.add(instance)
+    session.commit()
+    session.refresh(instance)
+
+    return instance

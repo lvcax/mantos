@@ -33,7 +33,7 @@ class Club(Base):
         primary_key=True,
         server_default=text("gen_random_uuid()")
     )
-    name: Mapped[str] = mapped_column(String(50))
-    country: Mapped[str] = mapped_column(String(20))
+    name: Mapped[str] = mapped_column(String(60))
+    country: Mapped[str] = mapped_column(String(60))
     created_at: Mapped[datetime] = mapped_column(insert_default=func.now())
     updated_at: Mapped[datetime] = mapped_column(insert_default=func.now(), onupdate=func.now())
