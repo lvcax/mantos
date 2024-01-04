@@ -7,6 +7,7 @@ from sqlalchemy.orm import Session
 from mantos.database import get_session
 from mantos.models import Club
 from mantos.schemas import ClubPublic, ClubSchema
+from mantos.utils import search_country
 
 router = APIRouter(prefix='/clubs', tags=['clubs'])
 
@@ -19,6 +20,9 @@ def create_club(club: ClubSchema, session: Session):
 
     if db_club:
         raise HTTPException(status_code=400, detail='club already exists')
+    
+    if not search_country(club.country):
+        raise HTTPException(status_code=400, detail='invalid country name')
 
     db_club = Club(name=club.name, country=club.country)
 
