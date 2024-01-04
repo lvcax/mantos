@@ -6,7 +6,7 @@ from pycountry import countries
 def search_country(country: str) -> bool:
     if countries.get(name=country) or countries.get(common_name=country):
         return True
-    
+
     return False
 
 
@@ -31,7 +31,7 @@ def generate_club() -> str:
         'Peñarol',
         'Al Ahly',
         'Porto',
-        'CSKA'
+        'CSKA',
     ]
 
     return random.choice(clubs)

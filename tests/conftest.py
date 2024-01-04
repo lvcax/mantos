@@ -1,6 +1,3 @@
-import random
-
-import factory
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -10,7 +7,6 @@ from mantos.app import app
 from mantos.database import get_session
 from mantos.models import Base, Club
 from mantos.settings import Settings
-from mantos.utils import generate_country
 
 
 @pytest.fixture
@@ -40,10 +36,10 @@ def session():
 
 @pytest.fixture
 def club(session):
-    instance = ClubFactory()
+    club: Club = Club(name='Milan', country='Italy')
 
-    session.add(instance)
+    session.add(club)
     session.commit()
-    session.refresh(instance)
+    session.refresh(club)
 
-    return instance
+    return club
