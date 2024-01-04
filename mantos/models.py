@@ -1,8 +1,9 @@
+import uuid
 from datetime import datetime
 from enum import Enum
-from uuid import UUID
 
-from sqlalchemy import ForeignKey, String, func
+from sqlalchemy import ForeignKey, String, func, types, text
+from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 
 
@@ -27,32 +28,12 @@ class JerseyType(str, Enum):
 class Club(Base):
     __tablename__ = 'clubs'
 
-    id: Mapped[UUID] = mapped_column(primary_key=True)
+    id: Mapped[uuid.UUID] = mapped_column(
+        types.Uuid,
+        primary_key=True,
+        server_default=text("gen_random_uuid()")
+    )
     name: Mapped[str] = mapped_column(String(50))
     country: Mapped[str] = mapped_column(String(20))
-
-    jerseys: Mapped[list['Jersey']] = relationship(
-        back_populates='club', cascade='all, delete-orphan'
-    )
-
     created_at: Mapped[datetime] = mapped_column(insert_default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(onupdate=func.now())
-
-
-class Jersey(Base):
-    __tablename__ = 'jerseys'
-
-    id: Mapped[UUID] = mapped_column(primary_key=True)
-    model_name: Mapped[str] = mapped_column(
-        String(50)
-    )
-    model_year: Mapped[str] = mapped_column(String(4))
-    version: Mapped[JerseyVersion]
-    type: Mapped[JerseyType]
-    supplier: Mapped[str] = mapped_column(String(20))
-    club_id: Mapped[UUID] = mapped_column(ForeignKey('clubs.id'))
-
-    club: Mapped[Club] = relationship(back_populates='clubs')
-
-    created_at: Mapped[datetime] = mapped_column(insert_default=func.now())
-    updated_at: Mapped[datetime] = mapped_column(onupdate=func.now())
+    updated_at: Mapped[datetime] = mapped_column(insert_default=func.now(), onupdate=func.now())

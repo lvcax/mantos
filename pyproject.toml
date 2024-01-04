@@ -23,6 +23,7 @@ blue = "^0.9.1"
 ruff = "^0.1.9"
 httpx = "^0.26.0"
 isort = "^5.13.2"
+factory-boy = "^3.3.0"
 
 [build-system]
 requires = ["poetry-core"]
@@ -39,6 +40,6 @@ extend-exclude = '(migrations/)'
 lint = 'ruff . && blue --check . --diff'
 format = 'blue .  && isort .'
 run = 'uvicorn mantos.app:app --reload'
-pre_test = 'task lint'
+pre-test = 'task lint'
 test = 'pytest -s -x --cov=mantos -vv'
-post_test = 'coverage html'
+post-test = 'coverage html'
